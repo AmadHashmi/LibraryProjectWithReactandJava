@@ -40,7 +40,7 @@ public class Book {
     @JsonProperty("category")
     @Column(name = "category")
     private String category;
-
+    @JsonProperty("img")
     @Column(name = "img")
     private String img;
 }
