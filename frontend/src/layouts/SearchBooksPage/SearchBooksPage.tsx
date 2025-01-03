@@ -14,6 +14,7 @@ export const SearchBooksPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [search, setSearch] = useState("");
   const [searchUrl, setSearchUrl] = useState("");
+  const [categorySelection, setCategorySelection] = useState("Book category");
   useEffect(() => {
     const fetchBooks = async () => {
       const baseUrl: string = "http://localhost:8080/api/books";
@@ -22,7 +23,12 @@ export const SearchBooksPage = () => {
       if (searchUrl === "") {
         url = `${baseUrl}?page=${currentPage - 1}&size=${booksPerPage}`;
       } else {
-        url = baseUrl + searchUrl;
+        let searchWithPage = searchUrl.replace(
+          "<pageNumber>",
+          `${currentPage - 1}`
+        );
+
+        url = baseUrl + searchWithPage;
       }
       const response = await fetch(url);
       if (!response.ok) {
@@ -70,15 +76,34 @@ export const SearchBooksPage = () => {
   }
 
   const searchHandleChange = () => {
+    setCurrentPage(1);
     console.log("search clicked");
     if (search === "") {
       setSearchUrl("");
     } else {
       setSearchUrl(
-        `/search/findByTitleContaining?title=${search}&page=0&size=${booksPerPage}`
+        `/search/findByTitleContaining?title=${search}&page=<pageNumber>&size=${booksPerPage}`
       );
     }
-    console.log(search);
+    setCategorySelection("Book category");
+  };
+
+  const categoryField = (value: string) => {
+    setCurrentPage(1);
+    if (
+      value.toLowerCase() === "fe" ||
+      value.toLowerCase() === "be" ||
+      value.toLowerCase() === "data" ||
+      value.toLowerCase() === "devops"
+    ) {
+      setCategorySelection(value);
+      setSearchUrl(
+        `/search/findByCategory?category=${value}&page=<pageNumber>size=${booksPerPage}`
+      );
+    } else {
+      setCategorySelection("All");
+      setSearchUrl(`?page=<pageNumber>size=${booksPerPage}`);
+    }
   };
 
   const indexOfLastBook: number = currentPage * booksPerPage;
@@ -121,33 +146,33 @@ export const SearchBooksPage = () => {
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  Category
+                  {categorySelection}
                 </button>
                 <ul
                   className="dropdown-menu"
                   aria-labelledby="dropdownMenuButton1"
                 >
-                  <li>
+                  <li onClick={() => categoryField("All")}>
                     <a href="#" className="dropdown-item">
                       All
                     </a>
                   </li>
-                  <li>
+                  <li onClick={() => categoryField("FE")}>
                     <a href="#" className="dropdown-item">
                       Front End
                     </a>
                   </li>
-                  <li>
+                  <li onClick={() => categoryField("BE")}>
                     <a href="#" className="dropdown-item">
                       Back End
                     </a>
                   </li>
-                  <li>
+                  <li onClick={() => categoryField("Data")}>
                     <a href="#" className="dropdown-item">
                       Data
                     </a>
                   </li>
-                  <li>
+                  <li onClick={() => categoryField("DevOps")}>
                     <a href="#" className="dropdown-item">
                       DevOps
                     </a>
