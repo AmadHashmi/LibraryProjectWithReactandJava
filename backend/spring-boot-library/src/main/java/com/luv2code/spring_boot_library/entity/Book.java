@@ -32,7 +32,7 @@ public class Book {
     @Column(name = "copies")
     private int copies;
 
-    @JsonProperty("copies_available")
+    @JsonProperty("copiesAvailable")
     @Column(name = "copies_available")
     private int copiesAvailable;
 
