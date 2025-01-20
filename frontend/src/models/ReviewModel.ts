@@ -23,4 +23,4 @@ class ReviewModel {
   }
 }
 
-export default ReviewModel;
+export default ReviewModel;  
