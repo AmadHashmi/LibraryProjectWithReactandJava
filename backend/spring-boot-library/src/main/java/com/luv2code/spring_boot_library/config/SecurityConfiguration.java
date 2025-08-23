@@ -20,7 +20,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configure(http)) // Proper CORS setup
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/books/secure/**").authenticated()
+                        .requestMatchers("/api/books/secure/**", "/api/reviews/secure/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2

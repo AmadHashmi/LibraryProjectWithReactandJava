@@ -1,6 +1,7 @@
 package com.luv2code.spring_boot_library.controller;
 
 
+import com.luv2code.spring_boot_library.entity.Review;
 import com.luv2code.spring_boot_library.reviewmodels.ReviewRequest;
 import com.luv2code.spring_boot_library.service.ReviewService;
 import com.luv2code.spring_boot_library.utils.ExtractJwt;
@@ -24,5 +25,18 @@ public class ReviewController {
         }
 
         reviewService.postReview(userEmail, reviewRequest);
+    }
+
+
+
+
+    @GetMapping("/secure/user/book")
+    public Boolean reviewBookByUser(@RequestHeader(value="Authorization") String token, @RequestParam Long bookId)throws  Exception{
+        String userEmail = ExtractJwt.payloadJwtExtraction(token, "\"sub\"");
+        if(userEmail == null){
+            throw  new Exception("User email is missing");
+        }
+
+        return reviewService.userReviewListed(userEmail, bookId);
     }
 }
